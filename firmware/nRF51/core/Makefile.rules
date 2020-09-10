@@ -62,6 +62,7 @@ LINKER_FLAGS=$(APP_LDFLAGS) -Xlinker --gc-sections -Xlinker -o$(TARGET).elf -Xli
 
 ARM_SRC= \
   $(APP_SRC) \
+  $(patsubst %,$(CORE)openbeacon/src/%,$(OPTION_SRC)) \
   $(CORE)startup/src/$(ARCH).c \
   $(CORE)nrf/src/system_$(ARCH).c \
   $(CORE)openbeacon/src/crc32.c \

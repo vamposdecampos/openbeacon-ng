@@ -12,13 +12,15 @@ APP_SRC=entry.c
 
 LIB_SRC= \
   lib/src/acc.c \
-  lib/src/adc.c \
   lib/src/flash.c \
   lib/src/radio.c \
   lib/src/timer.c \
   lib/src/main.c
 
 APP_SRC+=$(LIB_SRC) $(IMAGES_C)
+
+OPTION_SRC= \
+  adc.c
 
 all: $(TARGET).bin
 

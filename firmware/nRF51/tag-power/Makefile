@@ -19,7 +19,6 @@ APP_LDFLAGS=-lm
 APP_SRC= \
   src/rng.c \
   src/acc.c \
-  src/adc.c \
   src/aes.c \
   src/flash.c \
   src/radio.c \
@@ -27,6 +26,9 @@ APP_SRC= \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
+
+OPTION_SRC= \
+  adc.c
 
 all: $(TARGET).bin
 

@@ -22,7 +22,6 @@ APP_SRC= \
   src/log.c \
   src/rng.c \
   src/acc.c \
-  src/adc.c \
   src/aes.c \
   src/flash.c \
   src/radio.c \
@@ -30,6 +29,9 @@ APP_SRC= \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
+
+OPTION_SRC= \
+  adc.c
 
 all: prox_tag
 

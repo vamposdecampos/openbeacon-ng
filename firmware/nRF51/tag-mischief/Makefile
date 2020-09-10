@@ -10,7 +10,6 @@ APP_LDFLAGS=-lm
 
 APP_SRC= \
   src/acc.c \
-  src/adc.c \
   src/flash.c \
   src/radio.c \
   src/timer.c \
@@ -19,6 +18,10 @@ APP_SRC= \
 
 APP_SRC+=$(IMAGES_C)
 DB_FILE=inc/db.h
+
+OPTION_SRC= \
+  adc.c
+
 all: $(TARGET).bin
 
 publish: clean $(TARGET).bin
