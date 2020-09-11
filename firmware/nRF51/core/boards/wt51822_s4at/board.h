@@ -43,4 +43,8 @@
 #define CONFIG_SWITCH_PIN    4		/* pin6, TEST */
 #endif
 
+#ifndef CONFIG_UART_FORCE_POWERED
+#define CONFIG_UART_FORCE_POWERED	1
+#endif
+
 #endif /* __BOARD_H__ */
