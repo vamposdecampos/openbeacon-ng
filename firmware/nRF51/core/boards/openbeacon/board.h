@@ -40,4 +40,23 @@
 #define CONFIG_GPIO3_PIN     8
 #endif /* CONFIG_UART_RX */
 
+#define CONFIG_FLASH_MISO    16
+#define CONFIG_FLASH_MOSI    15
+#define CONFIG_FLASH_SCK     14
+#define CONFIG_FLASH_nRESET  13
+#define CONFIG_FLASH_nCS     12
+
+#define CONFIG_ADC0          1
+#define CONFIG_ADC1          2
+
+#define CONFIG_ACC_INT1_CH   0
+#define CONFIG_ACC_INT1      3
+#define CONFIG_ACC_nCS       4
+#define CONFIG_ACC_MISO      5
+#define CONFIG_ACC_MOSI      6
+#define CONFIG_ACC_SCK       7
+
+#define CONFIG_LED_PIN       17
+#define CONFIG_SWITCH_PIN    29
+
 #endif /* __BOARD_H__ */

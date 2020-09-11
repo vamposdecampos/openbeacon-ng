@@ -28,23 +28,8 @@
 #define CONFIG_UART_BAUDRATE UART_BAUDRATE_BAUDRATE_Baud1M
 #define CONFIG_UART_FORCE_POWERED 1
 
-#define CONFIG_FLASH_MISO    16
-#define CONFIG_FLASH_MOSI    15
-#define CONFIG_FLASH_SCK     14
-#define CONFIG_FLASH_nRESET  13
-#define CONFIG_FLASH_nCS     12
 #define SPI_FLASH            NRF_SPI0
-
-#define CONFIG_ACC_INT1_CH   0
-#define CONFIG_ACC_INT1      3
-#define CONFIG_ACC_nCS       4
-#define CONFIG_ACC_MISO      5
-#define CONFIG_ACC_MOSI      6
-#define CONFIG_ACC_SCK       7
 #define SPI_ACC              NRF_SPI1
-
-#define CONFIG_LED_PIN       17
-#define CONFIG_SWITCH_PIN    29
 
 /* only two priority bits available ! */
 
