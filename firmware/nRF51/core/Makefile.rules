@@ -10,6 +10,8 @@ SEGGER=
 JLINK=$(SEGGER)JLinkExe
 JLINK_OPT=-if swd -device $(CPU)_$(VARIANT)
 
+BOARD ?= openbeacon
+
 # determine program version
 PROGRAM_VERSION:=$(shell git describe --tags --abbrev=4 --dirty 2>/dev/null | sed s/^v//)
 ifeq ("$(PROGRAM_VERSION)","")
@@ -34,6 +36,7 @@ COMMON_CFLAGS= \
 -I$(CORE)nrf/inc \
 -I$(CORE)startup/inc \
 -I$(CORE)openbeacon/inc \
+-I$(CORE)boards/$(BOARD) \
 -Wall \
 -Werror \
 -Wextra  \

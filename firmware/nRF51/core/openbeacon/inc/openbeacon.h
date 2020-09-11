@@ -42,6 +42,7 @@ typedef uint8_t BOOL;
 #define FALSE 0
 
 #include <config.h>
+#include <board.h>
 
 /* this definition is linked weakly against uart_tx */
 extern BOOL default_putchar (uint8_t data);
@@ -83,6 +84,12 @@ htonl (uint32_t x)
 
 #ifndef CONFIG_LF_CLOCK_SRC
 #error Please set CONFIG_LF_CLOCK_SRC
+#endif
+
+#if !BOARD_HAVE_LF_XTAL
+#if CONFIG_LF_CLOCK_SRC == Xtal
+#error Board does not have a 32 kHz crystal
+#endif
 #endif
 
 #define ____CONFIG_LFCLKSRC_VAL(bitname) CLOCK_LFCLKSRC_SRC_ ## bitname
