@@ -25,10 +25,14 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 
-/**
- * Board has a 32 kHz crystal for the low-frequency clock.
- */
+/** Board has a 32 kHz crystal for the low-frequency clock. */
 #define BOARD_HAVE_LF_XTAL		1
+
+/** Board has an SPI flash chip. */
+#define BOARD_HAVE_SPI_FLASH		1
+
+/** Board has an SPI accelerometer. */
+#define BOARD_HAVE_SPI_ACCEL		1
 
 
 /** Pin definitions */
