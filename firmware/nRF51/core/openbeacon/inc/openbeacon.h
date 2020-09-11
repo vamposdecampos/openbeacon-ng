@@ -81,6 +81,13 @@ htonl (uint32_t x)
 
 #define BIT_REVERSE(x) ((unsigned char)(__RBIT(x)>>24))
 
+
+#if CONFIG_LF_CLOCK_SYNTH
+#define CONFIG_LFCLKSRC (CLOCK_LFCLKSRC_SRC_Synth << CLOCK_LFCLKSRC_SRC_Pos)
+#else
+#define CONFIG_LFCLKSRC (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos)
+#endif
+
 extern void main_entry(void);
 
 #endif/*__OPENBEACON_H__*/

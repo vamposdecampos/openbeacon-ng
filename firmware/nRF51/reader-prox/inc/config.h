@@ -43,6 +43,8 @@
 #define CONFIG_LED_PIN       17
 #define CONFIG_SWITCH_PIN    29
 
+#define CONFIG_LF_CLOCK_SYNTH    1
+
 /* only two priority bits available ! */
 
 #define IRQ_PRIORITY_HIGH        0
