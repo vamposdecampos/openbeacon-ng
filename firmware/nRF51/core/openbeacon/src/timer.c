@@ -55,10 +55,39 @@ void RTC1_IRQ_Handler(void)
 void timer_init(void)
 {
 	/* start 32kHz clock source */
+	debug_printf("start LFCLK...\r\n");
 	NRF_CLOCK->LFCLKSRC = CONFIG_LFCLKSRC;
 	NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
 	NRF_CLOCK->TASKS_LFCLKSTART = 1;
-	while(!NRF_CLOCK->EVENTS_LFCLKSTARTED);
+	while(!NRF_CLOCK->EVENTS_LFCLKSTARTED)
+		;
+
+	if ((NRF_CLOCK->LFCLKSRC & CLOCK_LFCLKSRC_SRC_Msk) >> CLOCK_LFCLKSRC_SRC_Pos == CLOCK_LFCLKSRC_SRC_RC) {
+		debug_printf("start HFCLK...\r\n");
+		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+		NRF_CLOCK->TASKS_HFCLKSTART = 1;
+		while(!NRF_CLOCK->EVENTS_HFCLKSTARTED)
+			;
+		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+
+		debug_printf("calibrate LFCLK...\r\n");
+		NRF_CLOCK->CTIV = 16; /* TODO: make configurable */
+		NRF_CLOCK->EVENTS_CTTO = 0;
+		NRF_CLOCK->EVENTS_DONE = 0;
+		NRF_CLOCK->TASKS_CTSTART = 1;
+		NRF_CLOCK->TASKS_CAL = 1;
+		while (!NRF_CLOCK->EVENTS_DONE && !NRF_CLOCK->EVENTS_CTTO)
+			;
+		debug_printf("DONE=%u CTTO=%u\r\n",
+			NRF_CLOCK->EVENTS_DONE,
+			NRF_CLOCK->EVENTS_CTTO);
+		NRF_CLOCK->TASKS_CTSTOP = 1;
+
+		debug_printf("stop HFCLK...\r\n");
+		NRF_CLOCK->TASKS_HFCLKSTOP = 1;
+	}
+
+	debug_printf("clock setup done.\r\n");
 
 	/* setup delay routine */
 	NRF_RTC1->COUNTER = 0;
