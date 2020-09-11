@@ -155,6 +155,7 @@ void RTC0_IRQ_Handler(void)
 			g_listen_ratio = 0;
 			g_nrf_state = NRF_STATE_RX_PROX;
 
+#if BOARD_HAVE_RADIO_DCDC
 			/* only start DC/DC converter for
 			 * RX & higher battery voltages */
 			if(adc_bat()>=NRF_DCDC_STARTUP_VOLTAGE)
@@ -164,6 +165,7 @@ void RTC0_IRQ_Handler(void)
 					(POWER_DCDCEN_DCDCEN_Enabled << POWER_DCDCEN_DCDCEN_Pos)
 				);
 			}
+#endif
 		}
 	}
 

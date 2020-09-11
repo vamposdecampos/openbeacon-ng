@@ -28,6 +28,12 @@
 /** Board has a 32 kHz crystal for the low-frequency clock. */
 #define BOARD_HAVE_LF_XTAL		1
 
+/**
+ * Board supports DC-DC converter for RADIO,
+ * i.e. has a suitable LC filter circuit on DCC pin.
+ */
+#define BOARD_HAVE_RADIO_DCDC		1
+
 /** Board has an SPI flash chip. */
 #define BOARD_HAVE_SPI_FLASH		1
 

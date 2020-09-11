@@ -71,6 +71,7 @@ void RTC0_IRQ_Handler(void)
 		/* start HF crystal oscillator */
 		NRF_CLOCK->TASKS_HFCLKSTART = 1;
 
+#if BOARD_HAVE_RADIO_DCDC
 		/* start ADC conversion */
 		adc_start();
 
@@ -83,6 +84,7 @@ void RTC0_IRQ_Handler(void)
 				(POWER_DCDCEN_DCDCEN_Enabled << POWER_DCDCEN_DCDCEN_Pos)
 			);
 		}
+#endif
 	}
 }
 

@@ -197,6 +197,10 @@ void radio_init(void)
 	NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
 	NRF_CLOCK->TASKS_HFCLKSTART = 1;
 
+#if BOARD_HAVE_RADIO_DCDC
 	/* start DC-DC converter */
 	NRF_POWER->DCDCEN = (POWER_DCDCEN_DCDCEN_Enabled << POWER_DCDCEN_DCDCEN_Pos);
+#else
+	NRF_POWER->DCDCEN = 0;
+#endif
 }
