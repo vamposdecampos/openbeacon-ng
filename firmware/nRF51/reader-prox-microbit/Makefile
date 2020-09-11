@@ -1,4 +1,5 @@
 TARGET=reader-prox-microbit
+BOARD?=microbit
 ARCH=nrf5
 FORMAT=bin
 CPU=$(ARCH)1822
