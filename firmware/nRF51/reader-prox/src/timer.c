@@ -54,9 +54,8 @@ void RTC1_IRQ_Handler(void)
 
 void timer_init(void)
 {
-	/* start synthesized 32kHz clock source */
-	NRF_CLOCK->LFCLKSRC =
-		(CLOCK_LFCLKSRC_SRC_Synth << CLOCK_LFCLKSRC_SRC_Pos);
+	/* start 32kHz clock source */
+	NRF_CLOCK->LFCLKSRC = CONFIG_LFCLKSRC;
 	NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
 	NRF_CLOCK->TASKS_LFCLKSTART = 1;
 	while(!NRF_CLOCK->EVENTS_LFCLKSTARTED);

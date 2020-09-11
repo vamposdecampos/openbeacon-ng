@@ -81,6 +81,15 @@ htonl (uint32_t x)
 
 #define BIT_REVERSE(x) ((unsigned char)(__RBIT(x)>>24))
 
+#ifndef CONFIG_LF_CLOCK_SRC
+#error Please set CONFIG_LF_CLOCK_SRC
+#endif
+
+#define ____CONFIG_LFCLKSRC_VAL(bitname) CLOCK_LFCLKSRC_SRC_ ## bitname
+#define __CONFIG_LFCLKSRC_VAL(bitname) ____CONFIG_LFCLKSRC_VAL(bitname)
+#define CONFIG_LFCLKSRC \
+	(__CONFIG_LFCLKSRC_VAL(CONFIG_LF_CLOCK_SRC) << CLOCK_LFCLKSRC_SRC_Pos)
+
 extern void main_entry(void);
 
 #endif/*__OPENBEACON_H__*/

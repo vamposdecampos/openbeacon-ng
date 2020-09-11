@@ -31,6 +31,8 @@
 #define CONFIG_UART_TXD_PIN  24
 #define CONFIG_UART_RXD_PIN  25
 
+#define CONFIG_LF_CLOCK_SRC  Synth
+
 #define CONFIG_BTN_A         17
 #define CONFIG_BTN_B         26
 

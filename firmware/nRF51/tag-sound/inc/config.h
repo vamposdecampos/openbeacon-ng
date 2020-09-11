@@ -35,6 +35,8 @@
 #define CONFIG_PWM_PIN_A     1
 #define CONFIG_PWM_PIN_B     2
 
+#define CONFIG_LF_CLOCK_SRC  Xtal
+
 /* only two priority bits available ! */
 
 #define IRQ_PRIORITY_HIGH        0
