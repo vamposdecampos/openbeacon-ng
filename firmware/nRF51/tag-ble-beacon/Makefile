@@ -12,13 +12,13 @@ APP_SRC= \
   src/acc.c \
   src/flash.c \
   src/radio.c \
-  src/timer.c \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
 
 OPTION_SRC= \
-  adc.c
+  adc.c \
+  timer.c
 
 all: $(TARGET).bin
 

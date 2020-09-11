@@ -25,13 +25,13 @@ APP_SRC= \
   src/aes.c \
   src/flash.c \
   src/radio.c \
-  src/timer.c \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
 
 OPTION_SRC= \
-  adc.c
+  adc.c \
+  timer.c
 
 all: prox_tag
 
