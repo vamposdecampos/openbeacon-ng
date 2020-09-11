@@ -30,4 +30,14 @@
  */
 #define BOARD_HAVE_LF_XTAL		1
 
+
+/** Pin definitions */
+/* TODO: rename these CONFIG_* to BOARD_* */
+#define CONFIG_UART_TXD_PIN  9
+#ifdef  CONFIG_UART_RX
+#define CONFIG_UART_RXD_PIN  8
+#else
+#define CONFIG_GPIO3_PIN     8
+#endif /* CONFIG_UART_RX */
+
 #endif /* __BOARD_H__ */

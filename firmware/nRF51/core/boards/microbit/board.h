@@ -30,4 +30,9 @@
  */
 #define BOARD_HAVE_LF_XTAL		1
 
+
+/** Pin definitions */
+#define CONFIG_UART_TXD_PIN  24
+#define CONFIG_UART_RXD_PIN  25
+
 #endif /* __BOARD_H__ */

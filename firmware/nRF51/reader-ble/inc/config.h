@@ -26,12 +26,6 @@
 #define __CONFIG_H__
 
 #define CONFIG_UART_BAUDRATE UART_BAUDRATE_BAUDRATE_Baud115200
-#define CONFIG_UART_TXD_PIN  9
-#ifdef  CONFIG_UART_RX
-#define CONFIG_UART_RXD_PIN  8
-#else
-#define CONFIG_GPIO3_PIN     8
-#endif/*CONFIG_UART_RX*/
 
 #define CONFIG_LED_PIN       17
 #define CONFIG_SWITCH_PIN    29
