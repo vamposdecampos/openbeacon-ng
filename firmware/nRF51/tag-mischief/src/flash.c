@@ -26,6 +26,8 @@
 #include <flash.h>
 #include <timer.h>
 
+#if BOARD_HAVE_SPI_FLASH
+
 static const uint8_t g_flash_id[]={0x1f,0x00,0x00,0x01,0x00};
 static uint8_t g_flash_size;
 #define MEGABYTE(x) (x*1024UL*1024UL)
@@ -124,3 +126,11 @@ uint8_t flash_init(void)
 	return 0;
 }
 
+#else /* BOARD_HAVE_SPI_FLASH */
+
+uint8_t flash_init(void)
+{
+	return 0;
+}
+
+#endif /* BOARD_HAVE_SPI_FLASH */
