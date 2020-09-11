@@ -26,6 +26,8 @@
 #include <acc.h>
 #include <timer.h>
 
+#if BOARD_HAVE_SPI_ACCEL
+
 /* lookup sine table of r/z to degrees */
 static const int8_t g_asin7deg_table[] = {
 	 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 6, 7,
@@ -178,3 +180,18 @@ uint8_t acc_init(void)
 
 	return 0;
 }
+
+#else /* BOARD_HAVE_SPI_ACCEL */
+
+uint8_t acc_init(void)
+{
+	return 0;
+}
+
+uint16_t acc_magnitude(int8_t* angle)
+{
+	*angle = 90;
+	return 1;
+}
+
+#endif /* BOARD_HAVE_SPI_ACCEL */
