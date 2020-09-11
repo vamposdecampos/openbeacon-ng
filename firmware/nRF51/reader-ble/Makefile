@@ -10,10 +10,12 @@ APP_LDFLAGS=-lm
 
 APP_SRC= \
   src/radio.c \
-  src/timer.c \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
+
+OPTION_SRC= \
+  timer.c
 
 all: $(TARGET).bin
 

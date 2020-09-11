@@ -13,10 +13,12 @@ APP_SRC= \
   src/aes.c \
   src/clock.c \
   src/radio.c \
-  src/timer.c \
   src/main.c
 
 APP_SRC+=$(IMAGES_C)
+
+OPTION_SRC= \
+  timer.c
 
 all: tracker_tag
 

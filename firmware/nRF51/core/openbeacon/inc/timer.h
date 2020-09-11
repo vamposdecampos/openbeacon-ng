@@ -2,7 +2,7 @@
  *
  * OpenBeacon.org - nRF51 Timer Routines
  *
- * Copyright 2013 Milosch Meriac <meriac@openbeacon.de>
+ * Copyright 2013-2015 Milosch Meriac <meriac@openbeacon.de>
  *
  ***************************************************************
 
@@ -29,6 +29,7 @@
 
 #define SECONDS(x) ((uint32_t)((LF_FREQUENCY*x)+0.5))
 #define MILLISECONDS(x) ((uint32_t)(((LF_FREQUENCY*x)/1000.0)+0.5))
+#define timer_wait_ms(x) timer_wait(MILLISECONDS(x))
 
 extern void timer_init(void);
 extern void timer_wait(uint32_t ticks);

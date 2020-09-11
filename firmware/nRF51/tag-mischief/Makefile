@@ -12,7 +12,6 @@ APP_SRC= \
   src/acc.c \
   src/flash.c \
   src/radio.c \
-  src/timer.c \
   src/name.c \
   src/main.c
 
@@ -20,7 +19,8 @@ APP_SRC+=$(IMAGES_C)
 DB_FILE=inc/db.h
 
 OPTION_SRC= \
-  adc.c
+  adc.c \
+  timer.c
 
 all: $(TARGET).bin
 
