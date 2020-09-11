@@ -35,4 +35,12 @@
 #define CONFIG_UART_TXD_PIN  2
 #define CONFIG_UART_RXD_PIN  1
 
+/* These are not on the module, so they depend on external wiring. */
+#ifndef CONFIG_LED_PIN
+#define CONFIG_LED_PIN       3		/* pin5, INT */
+#endif
+#ifndef CONFIG_SWITCH_PIN
+#define CONFIG_SWITCH_PIN    4		/* pin6, TEST */
+#endif
+
 #endif /* __BOARD_H__ */
