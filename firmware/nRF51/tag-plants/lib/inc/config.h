@@ -50,6 +50,7 @@
 #define IRQ_PRIORITY_RTC1        (IRQ_PRIORITY_LOW)
 #define IRQ_PRIORITY_ADC         (IRQ_PRIORITY_LOW)
 #define IRQ_PRIORITY_UART0       (IRQ_PRIORITY_LOW)
+#define IRQ_PRIORITY_TEMP        (IRQ_PRIORITY_LOW)
 
 #include "lib.h"
 

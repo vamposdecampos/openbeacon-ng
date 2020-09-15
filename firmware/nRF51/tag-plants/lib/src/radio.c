@@ -60,6 +60,7 @@ static const TMapping g_advertisment[] = {
 
 void RTC0_IRQ_Handler(void)
 {
+#if BOARD_HAVE_RADIO_DCDC
 	/* run every second */
 	if(NRF_RTC0->EVENTS_COMPARE[0])
 	{
@@ -72,6 +73,7 @@ void RTC0_IRQ_Handler(void)
 		/* start ADC conversion */
 		adc_start();
 	}
+#endif
 
 	/* run every g_beacon_pkt_interval */
 	if(NRF_RTC0->EVENTS_COMPARE[1])
@@ -131,6 +133,8 @@ static void radio_send_advertisment(void)
 	g_pkt_buffer[9] = 0x01;
 	g_pkt_buffer[10]= 0x04;
 
+	radio_advertise_hook();
+
 	/* append beacon packet */
 	g_pkt_buffer[1]= BLE_PREFIX_SIZE+g_beacon_pkt_len;
 	if(g_beacon_pkt_len)
@@ -155,6 +159,8 @@ void POWER_CLOCK_IRQ_Handler(void)
 	{
 		/* acknowledge event */
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+
+		radio_hfclk_hook();
 
 		/* start advertising */
 		radio_send_advertisment();
