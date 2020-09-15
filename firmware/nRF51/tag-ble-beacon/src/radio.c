@@ -27,6 +27,7 @@
 #include <radio.h>
 #include <adc.h>
 #include <timer.h>
+#include <temp.h>
 
 /* don't start DC/DC converter for voltages below 2.3V */
 #define NRF_DCDC_STARTUP_VOLTAGE 23
@@ -141,11 +142,15 @@ void radio_send_advertisment(void)
 	/* advertise guid */
 	else
 	{
+		/* 8:8 fixed point format */
+		int32_t temp = ((int32_t) NRF_TEMP->TEMP) << 6;
+	
 		/* append iBeacon GUID */
 		g_pkt_buffer[ 1]= BLE_PREFIX_SIZE+sizeof(g_ibeacon_pkt);
 		memcpy(&g_pkt_buffer[BLE_POSTFIX], &g_ibeacon_pkt, sizeof(g_ibeacon_pkt));
 		/* set angle & battery voltage as minor */
-		g_pkt_buffer[BLE_POSTFIX+sizeof(g_ibeacon_pkt)-3] = tag_angle();
+		g_pkt_buffer[BLE_POSTFIX+sizeof(g_ibeacon_pkt)-4] = temp & 0xff;
+		g_pkt_buffer[BLE_POSTFIX+sizeof(g_ibeacon_pkt)-3] = (temp >> 8) & 0xff;
 		g_pkt_buffer[BLE_POSTFIX+sizeof(g_ibeacon_pkt)-2] = adc_bat();
 	}
 
@@ -164,6 +169,10 @@ void POWER_CLOCK_IRQ_Handler(void)
 	{
 		/* acknowledge event */
 		NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+
+		/* start ADC and temperature conversion */
+		adc_start();
+		temp_start();
 
 		/* start advertising */
 		radio_send_advertisment();
@@ -210,6 +219,9 @@ void radio_init(uint32_t uid)
 
 	/* initialize ADC battery voltage measurements */
 	adc_init();
+
+	/* set up temperature unit */
+	temp_init();
 
 	/* setup default radio settings for proximity mode */
 	NRF_RADIO->MODE = RADIO_MODE_MODE_Ble_1Mbit << RADIO_MODE_MODE_Pos;

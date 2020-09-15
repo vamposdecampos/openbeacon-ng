@@ -18,6 +18,7 @@ APP_SRC+=$(IMAGES_C)
 
 OPTION_SRC= \
   adc.c \
+  temp.c \
   timer.c
 
 all: $(TARGET).bin
