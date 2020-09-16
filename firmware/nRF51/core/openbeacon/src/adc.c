@@ -25,7 +25,31 @@
 #include <openbeacon.h>
 #include <adc.h>
 
+#ifndef CONFIG_ADC_PSEL
+#define CONFIG_ADC_PSEL ADC_CONFIG_PSEL_Disabled
+#endif
+
 static volatile uint8_t g_battery_voltage;
+static volatile uint8_t g_pin_voltage;
+
+static void adc_start_cfg(uint32_t psel)
+{
+	if (psel) {
+		NRF_ADC->CONFIG =
+			(ADC_CONFIG_REFSEL_VBG                           << ADC_CONFIG_REFSEL_Pos) |
+			(ADC_CONFIG_INPSEL_AnalogInputOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) |
+			(ADC_CONFIG_RES_8bit                             << ADC_CONFIG_RES_Pos) |
+			(psel                                            << ADC_CONFIG_PSEL_Pos);
+	} else {
+		/* setup ADC for capturing battery voltage */
+		NRF_ADC->CONFIG =
+			(ADC_CONFIG_REFSEL_VBG                      << ADC_CONFIG_REFSEL_Pos) |
+			(ADC_CONFIG_INPSEL_SupplyOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) |
+			(ADC_CONFIG_RES_8bit                        << ADC_CONFIG_RES_Pos);
+	}
+	NRF_ADC->ENABLE = 1;
+	NRF_ADC->TASKS_START = 1;
+}
 
 void ADC_IRQ_Handler(void)
 {
@@ -34,25 +58,37 @@ void ADC_IRQ_Handler(void)
 		/* acknowledge event */
 		NRF_ADC->EVENTS_END = 0;
 
-		/* read battery voltage */
-		g_battery_voltage = (((uint16_t)(NRF_ADC->RESULT & 0xFF))*36)>>8;
+		uint8_t reading = (((uint16_t)(NRF_ADC->RESULT & 0xFF))*36)>>8;
+		if (NRF_ADC->CONFIG & ADC_CONFIG_PSEL_Msk) {
+			/* AIN pin input */
+			g_pin_voltage = reading;
 
-		/* disable ADC after sampling voltage */
-		NRF_ADC->TASKS_STOP = 1;
-		NRF_ADC->ENABLE = 0;
+			adc_start_cfg(0);
+		} else {
+			/* read battery voltage */
+			g_battery_voltage = reading;
+
+			/* disable ADC after sampling voltage */
+			NRF_ADC->TASKS_STOP = 1;
+			NRF_ADC->ENABLE = 0;
+		}
 	}
 }
 
 void adc_start(void)
 {
 	/* start ADC voltage conversion */
-	NRF_ADC->ENABLE = 1;
-	NRF_ADC->TASKS_START = 1;
+	adc_start_cfg(CONFIG_ADC_PSEL);
 }
 
 uint8_t adc_bat(void)
 {
 	return g_battery_voltage;
+}
+
+uint8_t adc_ain(void)
+{
+	return g_pin_voltage;
 }
 
 uint8_t adc_bat_sync(void)
@@ -71,13 +107,8 @@ void adc_init(void)
 {
 	/* initialize batter voltage */
 	g_battery_voltage = 0;
+	g_pin_voltage = 0;
 
-	/* setup ADC for capturing battery voltage */
-	NRF_ADC->CONFIG = (
-		(ADC_CONFIG_REFSEL_VBG                      << ADC_CONFIG_REFSEL_Pos) |
-		(ADC_CONFIG_INPSEL_SupplyOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) |
-		(ADC_CONFIG_RES_8bit                        << ADC_CONFIG_RES_Pos)
-	);
 	NRF_ADC->INTENSET = (
 		(ADC_INTENSET_END_Enabled << ADC_INTENSET_END_Pos)
 	);

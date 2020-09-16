@@ -29,5 +29,6 @@ extern void adc_init(void);
 extern void adc_start(void);
 extern uint8_t adc_bat(void);
 extern uint8_t adc_bat_sync(void);
+extern uint8_t adc_ain(void);
 
 #endif/*__ADC_H__*/
