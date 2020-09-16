@@ -32,14 +32,19 @@
 static volatile uint8_t g_battery_voltage;
 static volatile uint8_t g_pin_voltage;
 
-static void adc_start_cfg(uint32_t psel)
+void adc_done_hook(void) ALIAS(default_adc_done_hook);
+void default_adc_done_hook(void)
 {
-	if (psel) {
+}
+
+static void adc_start_cfg(BOOL pin)
+{
+	if (pin) {
 		NRF_ADC->CONFIG =
 			(ADC_CONFIG_REFSEL_VBG                           << ADC_CONFIG_REFSEL_Pos) |
 			(ADC_CONFIG_INPSEL_AnalogInputOneThirdPrescaling << ADC_CONFIG_INPSEL_Pos) |
 			(ADC_CONFIG_RES_8bit                             << ADC_CONFIG_RES_Pos) |
-			(psel                                            << ADC_CONFIG_PSEL_Pos);
+			(CONFIG_ADC_PSEL                                 << ADC_CONFIG_PSEL_Pos);
 	} else {
 		/* setup ADC for capturing battery voltage */
 		NRF_ADC->CONFIG =
@@ -64,14 +69,16 @@ void ADC_IRQ_Handler(void)
 		uint8_t reading = (((uint16_t)(NRF_ADC->RESULT & 0xFF))*36)>>8;
 #endif
 
-		if (NRF_ADC->CONFIG & ADC_CONFIG_PSEL_Msk) {
+		if (!(NRF_ADC->CONFIG & ADC_CONFIG_PSEL_Msk)) {
+			/* read battery voltage */
+			g_battery_voltage = reading;
+
+			adc_start_cfg(1);
+		} else {
 			/* AIN pin input */
 			g_pin_voltage = reading;
 
-			adc_start_cfg(0);
-		} else {
-			/* read battery voltage */
-			g_battery_voltage = reading;
+			adc_done_hook();
 
 			/* disable ADC after sampling voltage */
 			NRF_ADC->TASKS_STOP = 1;
@@ -83,7 +90,7 @@ void ADC_IRQ_Handler(void)
 void adc_start(void)
 {
 	/* start ADC voltage conversion */
-	adc_start_cfg(CONFIG_ADC_PSEL);
+	adc_start_cfg(0);
 }
 
 uint8_t adc_bat(void)
