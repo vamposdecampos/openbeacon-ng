@@ -41,17 +41,25 @@ void radio_advertise_hook(void)
 
 void entry(void)
 {
-	/* set advertisment packet */
-	radio_advertise(&g_beacon_pkt, sizeof(g_beacon_pkt));
-	/* run advertisement in background every 995ms */
-	radio_interval_ms(995);
-
 	nrf_gpio_cfg_input(CONFIG_ADC_PIN, GPIO_PIN_CNF_PULL_Disabled);
+	nrf_gpio_cfg_input(13, GPIO_PIN_CNF_PULL_Pulldown);
 
 	adc_init();
 	adc_start();
 	temp_init();
 	temp_start(); // HFCLK not enabled, but mmkay.
+
+	/* set advertisment packet */
+	radio_advertise(&g_beacon_pkt, sizeof(g_beacon_pkt));
+	/* run advertisement in background every 995ms */
+
+	if (nrf_gpio_pin_read(13)) {
+		pin_set(CONFIG_LED_PIN);
+		timer_wait_ms(500);
+		radio_interval_ms(995);
+	} else {
+		radio_interval_ms(9995);
+	}
 
 	/* infinite foreground loop */
 	while(TRUE)
