@@ -26,9 +26,31 @@ import asyncio
 import argparse
 import re
 import aioblescan as aiobs
+from struct import unpack
 from aioblescan.plugins import EddyStone
 from aioblescan.plugins import RuuviWeather
 from aioblescan.plugins import BlueMaestro
+
+class Plants(object):
+    """
+    Class defining the content of Plants advertisement
+    """
+    MFG_ID = 0x4242
+
+    def decode(self, packet):
+        data = {}
+        raw_data = packet.retrieve("Manufacturer Specific Data")
+        raw_data = raw_data[0].payload
+        if raw_data:
+            mfg_id = raw_data[0].val
+            if mfg_id == self.MFG_ID:
+                pckt = raw_data[1].val
+                data['version'], raw_temp_lo, raw_temp_hi, raw_batt, raw_adc = unpack('<BBBBB', pckt[:5])
+                data['temperature'] = raw_temp_hi + (raw_temp_lo / 256.0)
+                data['batt_volts'] = (raw_batt / 256.0) * 1.2 * 3
+                data['adc_volts'] = (raw_adc / 256.0) * 1.2 * 3
+        return data
+
 
 
 def check_mac(val):
@@ -48,6 +70,8 @@ parser.add_argument("-r","--ruuvi", action='store_true', default=False,
                     help="Look only for Ruuvi tag Weather station messages")
 parser.add_argument("-p","--pebble", action='store_true', default=False,
                     help="Look only for Pebble Environment Monitor")
+parser.add_argument("--plants", action='store_true', default=False,
+                    help="Look only for Plants telemetry")
 parser.add_argument("-R","--raw", action='store_true', default=False,
                     help="Also show the raw data.")
 parser.add_argument("-a","--advertise", type= int, default=0,
@@ -93,6 +117,10 @@ def my_process(data):
         xx=BlueMaestro().decode(ev)
         if xx:
             print("Pebble info {}".format(xx))
+    elif opts.plants:
+        xx=Plants().decode(ev)
+        if xx:
+            print("Plants info {}".format(xx))
     else:
         ev.show(0)
 
