@@ -78,6 +78,8 @@ void RTC0_IRQ_Handler(void)
 	/* run every g_beacon_pkt_interval */
 	if(NRF_RTC0->EVENTS_COMPARE[1])
 	{
+		radio_start_hook();
+
 		/* increment sequence counter once per second */
 		g_sequence_counter++;
 

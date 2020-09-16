@@ -22,10 +22,20 @@ static uint8_t g_beacon_pkt[] = {
 #endif
 };
 
+void radio_start_hook(void)
+{
+	pin_set(CONFIG_LED_PIN);
+}
+
 void radio_hfclk_hook(void)
 {
 	temp_start();
 	adc_start();
+}
+
+void adc_done_hook(void)
+{
+	pin_clear(CONFIG_LED_PIN);
 }
 
 void radio_advertise_hook(void)
@@ -42,7 +52,14 @@ void radio_advertise_hook(void)
 void entry(void)
 {
 	nrf_gpio_cfg_input(CONFIG_ADC_PIN, GPIO_PIN_CNF_PULL_Disabled);
-	nrf_gpio_cfg_input(13, GPIO_PIN_CNF_PULL_Pulldown);
+	nrf_gpio_cfg_input(CONFIG_TEST_PIN, GPIO_PIN_CNF_PULL_Pulldown);
+
+	/* drive strength: standard 0, high 1 */
+	nrf_gpio_cfg_output(CONFIG_LED_PIN);
+	NRF_GPIO->PIN_CNF[CONFIG_LED_PIN] =
+		(GPIO_PIN_CNF_DIR_Output       << GPIO_PIN_CNF_DIR_Pos) |
+		(GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos) |
+		(GPIO_PIN_CNF_DRIVE_S0H1       << GPIO_PIN_CNF_DRIVE_Pos);
 
 	adc_init();
 	adc_start();
@@ -53,21 +70,19 @@ void entry(void)
 	radio_advertise(&g_beacon_pkt, sizeof(g_beacon_pkt));
 	/* run advertisement in background every 995ms */
 
-	if (nrf_gpio_pin_read(13)) {
+	if (nrf_gpio_pin_read(CONFIG_TEST_PIN)) {
 		pin_set(CONFIG_LED_PIN);
 		timer_wait_ms(500);
+		pin_clear(CONFIG_LED_PIN);
 		radio_interval_ms(995);
 	} else {
+		pin_set(CONFIG_LED_PIN);
+		timer_wait_ms(50);
+		pin_clear(CONFIG_LED_PIN);
 		radio_interval_ms(9995);
 	}
 
 	/* infinite foreground loop */
 	while(TRUE)
-	{
-		/* blink once every five seconds */
-		timer_wait_ms(5000);
-		pin_set(CONFIG_LED_PIN);
-		timer_wait_ms(1);
-		pin_clear(CONFIG_LED_PIN);
-	}
+		__WFE();
 }

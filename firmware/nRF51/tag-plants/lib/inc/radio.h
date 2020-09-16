@@ -31,6 +31,7 @@ extern int radio_advertise(const void* packet, uint32_t len);
 extern void radio_interval(uint32_t ticks);
 
 /* in entry.c */
+extern void radio_start_hook(void);
 extern void radio_hfclk_hook(void);
 extern void radio_advertise_hook(void);
 

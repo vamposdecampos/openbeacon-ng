@@ -42,6 +42,8 @@
 #define CONFIG_ADC_PSEL      ADC_CONFIG_PSEL_AnalogInput5
 #define CONFIG_ADC_RAW       1
 
+#define CONFIG_TEST_PIN      10 /* RESET */
+
 /* only two priority bits available ! */
 
 #define IRQ_PRIORITY_HIGH        0
