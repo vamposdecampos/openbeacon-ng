@@ -26,6 +26,7 @@ import asyncio
 import argparse
 import re
 import aioblescan as aiobs
+import time
 from struct import unpack
 from aioblescan.plugins import EddyStone
 from aioblescan.plugins import RuuviWeather
@@ -76,6 +77,8 @@ parser.add_argument("-p","--pebble", action='store_true', default=False,
                     help="Look only for Pebble Environment Monitor")
 parser.add_argument("--plants", action='store_true', default=False,
                     help="Look only for Plants telemetry")
+parser.add_argument("--ts", action='store_true', default=False,
+                    help="Print timestamp")
 parser.add_argument("-R","--raw", action='store_true', default=False,
                     help="Also show the raw data.")
 parser.add_argument("-a","--advertise", type= int, default=0,
@@ -107,23 +110,30 @@ def my_process(data):
         if not goon:
             return
 
+    ts = {}
+    if opts.ts:
+        ts['timestamp'] = time.time()
     if opts.raw:
         print("Raw data: {}".format(ev.raw_data))
     if opts.eddy:
         xx=EddyStone().decode(ev)
         if xx:
+            xx.update(ts)
             print("Google Beacon {}".format(xx))
     elif opts.ruuvi:
         xx=RuuviWeather().decode(ev)
         if xx:
+            xx.update(ts)
             print("Weather info {}".format(xx))
     elif opts.pebble:
         xx=BlueMaestro().decode(ev)
         if xx:
+            xx.update(ts)
             print("Pebble info {}".format(xx))
     elif opts.plants:
         xx=Plants().decode(ev)
         if xx:
+            xx.update(ts)
             print("Plants info {}".format(xx))
     else:
         ev.show(0)
