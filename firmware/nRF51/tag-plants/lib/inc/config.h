@@ -37,6 +37,10 @@
 #define SPI_FLASH            NRF_SPI0
 #define SPI_ACC              NRF_SPI1
 
+/* P0.04 == AIN5 */
+#define CONFIG_ADC_PIN       4
+#define CONFIG_ADC_PSEL      ADC_CONFIG_PSEL_AnalogInput5
+
 /* only two priority bits available ! */
 
 #define IRQ_PRIORITY_HIGH        0

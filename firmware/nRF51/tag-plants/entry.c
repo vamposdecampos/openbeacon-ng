@@ -36,6 +36,7 @@ void radio_advertise_hook(void)
 	g_beacon_pkt[sizeof(g_beacon_pkt)-4] = temp & 0xff;
 	g_beacon_pkt[sizeof(g_beacon_pkt)-3] = (temp >> 8) & 0xff;
 	g_beacon_pkt[sizeof(g_beacon_pkt)-2] = adc_bat();
+	g_beacon_pkt[sizeof(g_beacon_pkt)-1] = adc_ain();
 }
 
 void entry(void)
@@ -44,6 +45,8 @@ void entry(void)
 	radio_advertise(&g_beacon_pkt, sizeof(g_beacon_pkt));
 	/* run advertisement in background every 995ms */
 	radio_interval_ms(995);
+
+	nrf_gpio_cfg_input(CONFIG_ADC_PIN, GPIO_PIN_CNF_PULL_Disabled);
 
 	adc_init();
 	adc_start();
