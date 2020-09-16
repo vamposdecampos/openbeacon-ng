@@ -60,20 +60,20 @@ static const TMapping g_advertisment[] = {
 
 void RTC0_IRQ_Handler(void)
 {
-#if BOARD_HAVE_RADIO_DCDC
 	/* run every second */
 	if(NRF_RTC0->EVENTS_COMPARE[0])
 	{
 		/* acknowledge event */
 		NRF_RTC0->EVENTS_COMPARE[0] = 0;
 
+#if BOARD_HAVE_RADIO_DCDC
 		/* re-trigger timer */
 		NRF_RTC0->CC[0]+= MILLISECONDS(1000);
 
 		/* start ADC conversion */
 		adc_start();
-	}
 #endif
+	}
 
 	/* run every g_beacon_pkt_interval */
 	if(NRF_RTC0->EVENTS_COMPARE[1])
