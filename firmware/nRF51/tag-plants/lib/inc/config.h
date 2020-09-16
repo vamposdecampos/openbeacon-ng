@@ -40,6 +40,7 @@
 /* P0.04 == AIN5 */
 #define CONFIG_ADC_PIN       4
 #define CONFIG_ADC_PSEL      ADC_CONFIG_PSEL_AnalogInput5
+#define CONFIG_ADC_RAW       1
 
 /* only two priority bits available ! */
 

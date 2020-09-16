@@ -58,7 +58,12 @@ void ADC_IRQ_Handler(void)
 		/* acknowledge event */
 		NRF_ADC->EVENTS_END = 0;
 
+#ifdef CONFIG_ADC_RAW
+		uint8_t reading = NRF_ADC->RESULT & 0xff;
+#else
 		uint8_t reading = (((uint16_t)(NRF_ADC->RESULT & 0xFF))*36)>>8;
+#endif
+
 		if (NRF_ADC->CONFIG & ADC_CONFIG_PSEL_Msk) {
 			/* AIN pin input */
 			g_pin_voltage = reading;
