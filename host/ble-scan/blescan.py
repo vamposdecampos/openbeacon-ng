@@ -40,7 +40,11 @@ class Plants(object):
     def decode(self, packet):
         data = {}
         raw_data = packet.retrieve("Manufacturer Specific Data")
-        raw_data = raw_data[0].payload
+        if not raw_data:
+            return data
+        if type(raw_data) == list:
+            raw_data = raw_data[0]
+        raw_data = raw_data.payload
         if raw_data:
             mfg_id = raw_data[0].val
             if mfg_id == self.MFG_ID:
