@@ -58,6 +58,13 @@ static const TMapping g_advertisment[] = {
 };
 #define ADVERTISMENT_CHANNELS ((int)(sizeof(g_advertisment)/sizeof(g_advertisment[0])))
 
+void radio_start_advertise(void)
+{
+	/* re-trigger timer */
+	NRF_RTC0->CC[1] = NRF_RTC0->COUNTER + 50;
+	NRF_RTC0->TASKS_START = 1;
+}
+
 void RTC0_IRQ_Handler(void)
 {
 	/* run every second */
@@ -86,8 +93,9 @@ void RTC0_IRQ_Handler(void)
 		/* acknowledge event */
 		NRF_RTC0->EVENTS_COMPARE[1] = 0;
 
-		/* re-trigger timer */
-		NRF_RTC0->CC[1]+= g_beacon_pkt_interval;
+		if (g_beacon_pkt_interval)
+			/* re-trigger timer */
+			NRF_RTC0->CC[1] += g_beacon_pkt_interval;
 
 		g_advertisment_index = 0;
 
@@ -241,7 +249,7 @@ void radio_init(uint32_t uid)
 	/* reset default advertisment packet */
 	g_beacon_pkt = NULL;
 	g_beacon_pkt_len = 0;
-	g_beacon_pkt_interval = MILLISECONDS(1000);
+	g_beacon_pkt_interval = 0;
 
 	/* reset sequence counter */
 	g_sequence_counter = 0;
@@ -293,7 +301,7 @@ void radio_init(uint32_t uid)
 	NRF_RTC0->CC[0] = LF_FREQUENCY;
 	NRF_RTC0->CC[1] = LF_FREQUENCY*2;
 	NRF_RTC0->INTENSET = (
-		(RTC_INTENSET_COMPARE0_Enabled   << RTC_INTENSET_COMPARE0_Pos) |
+//HACK:		(RTC_INTENSET_COMPARE0_Enabled   << RTC_INTENSET_COMPARE0_Pos) |
 		(RTC_INTENSET_COMPARE1_Enabled   << RTC_INTENSET_COMPARE1_Pos)
 	);
 	NVIC_SetPriority(RTC0_IRQn, IRQ_PRIORITY_RTC0);

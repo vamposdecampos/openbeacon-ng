@@ -29,6 +29,7 @@ extern void radio_init(uint32_t uid);
 extern void radio_enable(BOOL enable);
 extern int radio_advertise(const void* packet, uint32_t len);
 extern void radio_interval(uint32_t ticks);
+extern void radio_start_advertise(void);
 
 /* in entry.c */
 extern void radio_start_hook(void);
