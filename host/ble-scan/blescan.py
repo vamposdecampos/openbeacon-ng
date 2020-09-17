@@ -89,11 +89,21 @@ parser.add_argument("-t","--txpower", type= int, default=0,
                     help="When broadcasting like an EddyStone Beacon, set the Tx power")
 parser.add_argument("-D","--device", type=int, default=0,
                     help="Select the hciX device to use (default 0, i.e. hci0).")
+
+# influxdb://username:password@localhost:8086/databasename
+parser.add_argument('--influx', metavar='DSN', type=str,
+                    help='InfluxDB database name')
+
 try:
     opts = parser.parse_args()
 except Exception as e:
     parser.error("Error: " + str(e))
     sys.exit()
+
+influx = None
+if opts.influx:
+    import influxdb
+    influx = influxdb.InfluxDBClient.from_dsn(opts.influx, timeout=5)
 
 def my_process(data):
     global opts
@@ -135,6 +145,25 @@ def my_process(data):
         if xx:
             xx.update(ts)
             print("Plants info {}".format(xx))
+            if influx:
+                tags = {}
+                node = ev.retrieve("peer")[0].val
+                points = []
+                points = [dict(
+                    measurement='temperature',
+                    tags=dict(node=node, version=xx['version']),
+                    fields=dict(value=xx['temperature']),
+                ), dict(
+                    measurement='voltage',
+                    tags=dict(node=node, version=xx['version'], sensor='battery'),
+                    fields=dict(value=xx['batt_volts']),
+                ), dict(
+                    measurement='voltage',
+                    tags=dict(node=node, version=xx['version'], sensor='adc'),
+                    fields=dict(value=xx['adc_volts']),
+                )]
+                influx.write_points(points)
+                #print(repr(points))
     else:
         ev.show(0)
 
